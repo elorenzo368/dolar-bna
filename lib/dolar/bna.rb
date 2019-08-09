@@ -13,9 +13,9 @@ module Dolar
     autoload :Exchanger, "dolar/bna/exchange"
     autoload :Converter, "dolar/bna/convert"
 
-    initializer "dolar.bna" do |app|
-      ActionView::Base.send :include, Dolar::Bna::DolarHelpers
-    end
+    # initializer "dolar.bna" do |app|
+    #   ActionView::Base.send :include, Dolar::Bna::DolarHelpers
+    # end
 
   end
 end

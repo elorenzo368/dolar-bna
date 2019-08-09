@@ -8,8 +8,19 @@ module Dolar
       end
 
       def perform
-        dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
-        dolar_buy = dolar_query.nil? ? nil : dolar_query.dolar_buy
+        #dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
+        dolar_buy = nil
+        while dolar_buy.nil?
+          if dolar_type.downcase == "divisa"
+            Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
+          elsif dolar_type.downcase == "billete"
+            Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
+          else
+            break
+          end
+          dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
+          dolar_buy = dolar_query.nil? ? nil : dolar_query.dolar_buy
+        end
         if @conversion == "ars_to_dolar"
           ars_to_dolar(dolar_buy)
         else
