@@ -1,5 +1,5 @@
 module Dolar
   module Bna
-    VERSION = "0.1.5.1"
+    VERSION = "1.0"
   end
 end

@@ -1,9 +1,7 @@
 module Dolar
   module Bna
     class DolarCotization < ActiveRecord::Base
-
       self.table_name = "dolar_cotizations"
-
       validates_presence_of :date, message: 'Indicar fecha de la cotización'
       validates_presence_of :dolar_type, message: 'Indicar tipo de cotizacion'
       validates_presence_of :dolar_buy, message: 'Indicar cotizacion de compra'

@@ -9,6 +9,17 @@ module Dolar
 
       def perform
         #dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
+        dolar_buy = set_dolar_buy()
+        if @conversion == "ars_to_usd"
+          ars_to_dolar(dolar_buy)
+        else
+          dolar_to_ars(dolar_buy)
+        end
+      end
+
+      private
+
+      def set_dolar_buy
         dolar_buy = nil
         while dolar_buy.nil?
           dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
@@ -22,20 +33,15 @@ module Dolar
               dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
               dolar_buy = dolar_query.dolar_buy
             else
+              dolar_buy = nil
               break
             end
           else
             dolar_buy = dolar_query.dolar_buy
           end
         end
-        if @conversion == "ars_to_usd"
-          ars_to_dolar(dolar_buy)
-        else
-          dolar_to_ars(dolar_buy)
-        end
+        return dolar_buy
       end
-
-      private
 
       def ars_to_dolar dolar_buy
         valor = if !dolar_buy.nil?
