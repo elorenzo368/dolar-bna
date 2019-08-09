@@ -1,7 +1,7 @@
 module Dolar
   module Bna
     class Convert
-      def initialize(value=0, conversion="ars_to_dolar", dolar_type="Divisa")
+      def initialize(value=0, conversion="ars_to_usd", dolar_type="Divisa")
         @value ||= value
         @conversion ||= conversion
         @dolar_type ||= dolar_type
@@ -11,17 +11,24 @@ module Dolar
         #dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
         dolar_buy = nil
         while dolar_buy.nil?
-          if dolar_type.downcase == "divisa"
-            Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
-          elsif dolar_type.downcase == "billete"
-            Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
-          else
-            break
-          end
           dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
-          dolar_buy = dolar_query.nil? ? nil : dolar_query.dolar_buy
+          if dolar_query.nil?
+            if @dolar_type.downcase == "divisa"
+              Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
+              dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
+              dolar_buy = dolar_query.dolar_buy
+            elsif @dolar_type.downcase == "billete"
+              Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
+              dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
+              dolar_buy = dolar_query.dolar_buy
+            else
+              break
+            end
+          else
+            dolar_buy = dolar_query.dolar_buy
+          end
         end
-        if @conversion == "ars_to_dolar"
+        if @conversion == "ars_to_usd"
           ars_to_dolar(dolar_buy)
         else
           dolar_to_ars(dolar_buy)
