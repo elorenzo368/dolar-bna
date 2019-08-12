@@ -8,13 +8,13 @@ module Dolar
 
       def perform_bna_billete
         data = get_dolar()
-        save_in_db(data, "Billete")
+        save_in_db(data, "Billete") unless data.blank?
         return data
       end
 
       def perform_bna_divisa
         data = get_dolar_divisa()
-        save_in_db(data, "Divisa")
+        save_in_db(data, "Divisa") unless data.blank?
         return data
       end
 
@@ -33,7 +33,7 @@ module Dolar
           end
         rescue => ex
           pp ex.message
-          return ""
+          return nil
         end
       end
 

@@ -20,24 +20,27 @@ module Dolar
       private
 
       def set_dolar_buy
-        dolar_buy = nil
-        while dolar_buy.nil?
+        dolar_buy = 0
+        intents = 0
+        while intents < 5
           dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
           if dolar_query.nil?
+            intents += 1
             if @dolar_type.downcase == "divisa"
               Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
               dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
-              dolar_buy = dolar_query.dolar_buy
+              dolar_buy = dolar_query.dolar_buy unless dolar_query.nil?
             elsif @dolar_type.downcase == "billete"
               Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
               dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
-              dolar_buy = dolar_query.dolar_buy
+              dolar_buy = dolar_query.dolar_buy unless dolar_query.nil?
             else
-              dolar_buy = nil
+              dolar_buy = 0
               break
             end
           else
             dolar_buy = dolar_query.dolar_buy
+            break
           end
         end
         return dolar_buy
