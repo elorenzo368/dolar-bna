@@ -1,8 +1,5 @@
 # Dolar::Bna
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dolar/bna`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
@@ -22,7 +19,24 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+After gem install run
+  $ rails g dolar:bna:install
+
+And
+  $ rake db:migrate
+
+To run conversions DOLAR to ARS
+
+  Dolar::Bna::Convert.new(value_to_convert, "usd_to_ars").perform
+
+To run conversions DOLAR to ARS
+
+  Dolar::Bna::Convert.new(value_to_convert, "ars_to_usd").perform
+
+all dolar prices are saved in BD in table dolar_cotizations. To obtain cotizations do:
+
+  Dolar::Bna::DolarCotization.all
+
 
 ## Development
 

@@ -9,9 +9,9 @@ module Dolar
 
       def perform
         #dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
-        dolar_buy = set_dolar_buy()
+        dolar_buy, dolar_sell = set_dolar()
         if @conversion == "ars_to_usd"
-          ars_to_dolar(dolar_buy)
+          ars_to_dolar(dolar_sell)
         else
           dolar_to_ars(dolar_buy)
         end
@@ -19,8 +19,9 @@ module Dolar
 
       private
 
-      def set_dolar_buy
+      def set_dolar
         dolar_buy = 0
+        dolar_sell = 0
         intents = 0
         while intents < 5
           dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
@@ -30,20 +31,24 @@ module Dolar
               Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
               dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
               dolar_buy = dolar_query.dolar_buy unless dolar_query.nil?
+              dolar_sell = dolar_query.dolar_sell unless dolar_query.nil?
             elsif @dolar_type.downcase == "billete"
               Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
               dolar_query =  Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).first
               dolar_buy = dolar_query.dolar_buy unless dolar_query.nil?
+              dolar_sell = dolar_query.dolar_sell unless dolar_query.nil?
             else
               dolar_buy = 0
+              dolar_sell = dolar_query.dolar_sell unless dolar_query.nil?
               break
             end
           else
             dolar_buy = dolar_query.dolar_buy
+            dolar_sell = dolar_query.dolar_sell unless dolar_query.nil?
             break
           end
         end
-        return dolar_buy
+        return dolar_buy, dolar_sell
       end
 
       def ars_to_dolar dolar_buy

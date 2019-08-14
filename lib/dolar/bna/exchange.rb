@@ -64,11 +64,11 @@ module Dolar
         correct_date = "#{@fecha.day.to_i}/#{@fecha.month.to_i}/#{@fecha.year.to_i}"
         i = data.key(correct_date)
         if !i.nil?
-          dolar_venta = BigDecimal(data[i - 2].tr(",", ".")).truncate(3).to_f
-          dolar_compra = BigDecimal(data[i - 1].tr(",", ".")).truncate(3).to_f
+          dolar_compra = BigDecimal(data[i - 2].tr(",", ".")).truncate(3).to_f
+          dolar_venta = BigDecimal(data[i - 1].tr(",", ".")).truncate(3).to_f
         else
-          dolar_venta = BigDecimal(data[1].tr(",", ".")).truncate(3).to_f
-          dolar_compra = BigDecimal(data[2].tr(",", ".")).truncate(3).to_f
+          dolar_compra = BigDecimal(data[1].tr(",", ".")).truncate(3).to_f
+          dolar_venta = BigDecimal(data[2].tr(",", ".")).truncate(3).to_f
         end
         return {compra: dolar_compra, venta: dolar_venta}
       end
