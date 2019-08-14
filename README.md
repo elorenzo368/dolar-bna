@@ -31,7 +31,7 @@ To run conversions DOLAR to ARS
 
     Dolar::Bna::Convert.new(value_to_convert, "usd_to_ars").perform
 
-To run conversions DOLAR to ARS
+To run conversions ARS to DOLAR
 
     Dolar::Bna::Convert.new(value_to_convert, "ars_to_usd").perform
 
