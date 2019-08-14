@@ -20,22 +20,24 @@ Or install it yourself as:
 ## Usage
 
 After gem install run
-  $ rails g dolar:bna:install
+
+    $ rails g dolar:bna:install
 
 And
-  $ rake db:migrate
+
+    $ rake db:migrate
 
 To run conversions DOLAR to ARS
 
-  Dolar::Bna::Convert.new(value_to_convert, "usd_to_ars").perform
+    Dolar::Bna::Convert.new(value_to_convert, "usd_to_ars").perform
 
 To run conversions DOLAR to ARS
 
-  Dolar::Bna::Convert.new(value_to_convert, "ars_to_usd").perform
+    Dolar::Bna::Convert.new(value_to_convert, "ars_to_usd").perform
 
 all dolar prices are saved in BD in table dolar_cotizations. To obtain cotizations do:
 
-  Dolar::Bna::DolarCotization.all
+    Dolar::Bna::DolarCotization.all
 
 
 ## Development
@@ -46,7 +48,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/dolar-bna. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/elorenzo368/dolar-bna. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
