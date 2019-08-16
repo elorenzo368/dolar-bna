@@ -1,5 +1,8 @@
 # Dolar::Bna
 
+## Developed by LITECODE S.A.S
+
+  www.litecode.com.ar
 
 ## Installation
 

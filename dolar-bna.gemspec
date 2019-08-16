@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["lorenzoezequiel30@gmail.com"]
 
   spec.summary       = %q{Cotizador de USD/ARS}
-  spec.description   = %q{Gema para obtener cotización de dolar divisa y dolar billete desde el sitio web del Banco Nación de Argentina }
-  spec.homepage      = "http://litecode.com.ar/"
+  spec.description   = %q{Gema para obtener cotización de dolar divisa y dolar billete, obtener variaciones respecto al día anterior y realizar conversiones. Valores obtenidos del sitio web del Banco Nación Argentina}
+  spec.homepage      = "https://github.com/elorenzo368/dolar-bna"
   spec.license       = "MIT"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"

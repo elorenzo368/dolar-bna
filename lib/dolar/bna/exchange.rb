@@ -7,18 +7,45 @@ module Dolar
       end
 
       def perform_bna_billete
-        data = get_dolar()
+        data = check_cotization("Billete", @fecha)
         save_in_db(data, "Billete") unless data.blank?
         return data
       end
 
       def perform_bna_divisa
-        data = get_dolar_divisa()
+        data = check_cotization("Divisa", @fecha)
         save_in_db(data, "Divisa") unless data.blank?
         return data
       end
 
+      def variation_billete
+        today_dolar = check_cotization("Billete", @fecha)
+        yesterday_dolar = check_cotization("Billete", (@fecha - 1.days))
+        unless (today_dolar.nil? || yesterday_dolar.nil?)
+          porcentual_variation = ((today_dolar[:venta] - yesterday_dolar[:venta]) / (yesterday_dolar[:venta]))
+          porcentual_variation = "#{(porcentual_variation * 100).round(2)}%"
+          return porcentual_variation
+        else
+          return "0%"
+        end
+      end
+
       private
+
+      def check_cotization dolar_type, date
+        query = Dolar::Bna::DolarCotization.where(date: date, dolar_type: dolar_type).first
+        ddolar = nil
+        if query.nil?
+          if dolar_type == "Divisa"
+            ddolar = get_dolar_divisa()
+          else
+            ddolar = get_dolar()
+          end
+        else
+          ddolar = {compra: query.dolar_buy, venta: query.dolar_sell}
+        end
+        return ddolar
+      end
 
       def get_dolar
         require "open-uri"

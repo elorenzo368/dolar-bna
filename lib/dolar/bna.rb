@@ -1,5 +1,6 @@
 require "dolar/bna/version"
 require 'dolar/bna/exchange'
+require 'dolar/bna/today_exchange'
 require 'dolar/bna/convert'
 require "dolar/app/models/dolar_cotization.rb"
 module Dolar
@@ -12,6 +13,7 @@ module Dolar
 
     autoload :Exchanger, "dolar/bna/exchange"
     autoload :Converter, "dolar/bna/convert"
+    autoload :TodayExchange, "dolar/bna/today_exchange"
 
     # initializer "dolar.bna" do |app|
     #   ActionView::Base.send :include, Dolar::Bna::DolarHelpers
