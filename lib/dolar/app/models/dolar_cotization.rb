@@ -6,6 +6,8 @@ module Dolar
       validates_presence_of :dolar_type, message: 'Indicar tipo de cotizacion'
       validates_presence_of :dolar_buy, message: 'Indicar cotizacion de compra'
       validates_presence_of :dolar_sell, message: 'Indicar cotizacion de venta'
+      validates_numericality_of :dolar_buy, greater_than: 0, message: 'La cotizacion debe ser mayor a 0'
+      validates_numericality_of :dolar_sell, greater_than: 0, message: 'La cotizacion debe ser mayor a 0'
       validates_uniqueness_of :date, scope: :dolar_type, message: 'Ya existe una cotización de ese tipo para la fecha ingresada'
       DOLAR_TYPES = ["Divisa", "Billete"]
 
