@@ -7,26 +7,47 @@ module Dolar
       end
 
       def perform_bna_billete
-        data = check_cotization("Billete", @fecha)
-        save_in_db(data, "Billete") unless data.blank?
-        return data
+        begin
+          Timeout.timeout(15) do
+            data = check_cotization("Billete", @fecha)
+            save_in_db(data, "Billete") unless data.blank?
+            return data
+          end
+        rescue => ex
+          pp ex.message
+          return nil
+        end
       end
 
       def perform_bna_divisa
-        data = check_cotization("Divisa", @fecha)
-        save_in_db(data, "Divisa") unless data.blank?
-        return data
+        begin
+          Timeout.timeout(15) do
+            data = check_cotization("Divisa", @fecha)
+            save_in_db(data, "Divisa") unless data.blank?
+            return data
+          end
+        rescue => ex
+          pp ex.message
+          return nil
+        end
       end
 
       def variation_billete
-        today_dolar = check_cotization("Billete", @fecha)
-        yesterday_dolar = check_cotization("Billete", (@fecha - 1.days))
-        unless (today_dolar.nil? || yesterday_dolar.nil?)
-          porcentual_variation = ((today_dolar[:venta] - yesterday_dolar[:venta]) / (yesterday_dolar[:venta]))
-          porcentual_variation = "#{(porcentual_variation * 100).round(2)}%"
-          return porcentual_variation
-        else
-          return "0%"
+        begin
+          Timeout.timeout(15) do
+            today_dolar = check_cotization("Billete", @fecha)
+            yesterday_dolar = check_cotization("Billete", (@fecha - 1.days))
+            unless (today_dolar.nil? || yesterday_dolar.nil?)
+              porcentual_variation = ((today_dolar[:venta] - yesterday_dolar[:venta]) / (yesterday_dolar[:venta]))
+              porcentual_variation = "#{(porcentual_variation * 100).round(2)}%"
+              return porcentual_variation
+            else
+              return "0%"
+            end
+          end
+        rescue => ex
+          pp ex.message
+          return nil
         end
       end
 
@@ -53,7 +74,7 @@ module Dolar
         mechanize = Mechanize.new
         mechanize.user_agent_alias = "Android"
         begin
-          Timeout.timeout(20) do
+          Timeout.timeout(15) do
             url = "http://www.bna.com.ar/Cotizador/HistoricoPrincipales?id=billetes&fecha=#{@fecha.day}%2F#{@fecha.month}%2F#{@fecha.year}&filtroEuro=0&filtroDolar=1"
             value = obtain_dolar_from_html(url, mechanize, data)
             return value
@@ -70,7 +91,7 @@ module Dolar
         mechanize = Mechanize.new
         mechanize.user_agent_alias = "Android"
         begin
-          Timeout.timeout(20) do
+          Timeout.timeout(15) do
             url = "http://www.bna.com.ar/Cotizador/MonedasHistorico"
             value = obtain_dolar_from_html(url, mechanize, data)
             return value

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    dolar-bna (1.0.7)
+    dolar-bna (1.0.8)
 
 GEM
   remote: https://rubygems.org/
