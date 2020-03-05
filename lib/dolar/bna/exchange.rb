@@ -2,6 +2,9 @@ module Dolar
   module Bna
     class Exchange
 
+      require 'openssl'
+      OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
       def initialize(fecha=Date.today)
         @fecha ||= fecha
       end
@@ -54,17 +57,17 @@ module Dolar
       private
 
       def check_cotization dolar_type, date
-        query = Dolar::Bna::DolarCotization.where(date: date, dolar_type: dolar_type).first
+        # query = Dolar::Bna::DolarCotization.where(date: date.to_date, dolar_type: dolar_type).first
         ddolar = nil
-        if query.nil?
+        # if query.nil?
           if dolar_type == "Divisa"
             ddolar = get_dolar_divisa()
           else
             ddolar = get_dolar()
           end
-        else
-          ddolar = {compra: query.dolar_buy, venta: query.dolar_sell}
-        end
+          #ddolar = {compra: query.dolar_buy, venta: query.dolar_sell}
+        # else
+        # end
         return ddolar
       end
 
@@ -75,8 +78,8 @@ module Dolar
         mechanize.user_agent_alias = "Android"
         begin
           Timeout.timeout(15) do
-            url = "http://www.bna.com.ar/Cotizador/HistoricoPrincipales?id=billetes&fecha=#{@fecha.day}%2F#{@fecha.month}%2F#{@fecha.year}&filtroEuro=0&filtroDolar=1"
-            value = obtain_dolar_from_html(url, mechanize, data)
+            url = "https://www.bna.com.ar/Cotizador/HistoricoPrincipales?id=billetes&fecha=#{@fecha.day}%2F#{@fecha.month}%2F#{@fecha.year}&filtroEuro=0&filtroDolar=1"
+            value = obtain_dolar_from_html(url, mechanize, data, "billete")
             return value
           end
         rescue => ex
@@ -92,8 +95,8 @@ module Dolar
         mechanize.user_agent_alias = "Android"
         begin
           Timeout.timeout(15) do
-            url = "http://www.bna.com.ar/Cotizador/MonedasHistorico"
-            value = obtain_dolar_from_html(url, mechanize, data)
+            url = "https://www.bna.com.ar/Cotizador/MonedasHistorico"
+            value = obtain_dolar_from_html(url, mechanize, data, "billete")
             return value
           end
         rescue => ex
@@ -102,8 +105,7 @@ module Dolar
         end
       end
 
-      def obtain_dolar_from_html(url, mechanize, data)
-
+      def obtain_dolar_from_html(url, mechanize, data, d_type)
         page = mechanize.get(url)
         doc = Nokogiri::HTML(page.body, "UTF-8")
         doc.xpath("//td").each_with_index do |node, index|
@@ -122,8 +124,20 @@ module Dolar
       end
 
       def save_in_db data, dolar_type
-        Dolar::Bna::DolarCotization.create(date: @fecha, dolar_type: dolar_type, dolar_buy: data[:compra], dolar_sell: data[:venta])
+        unless data.nil?
+          dr = Dolar::Bna::DolarCotization.where(date: @fecha.to_date, dolar_type: dolar_type, dolar_buy: data[:compra], dolar_sell: data[:venta]).first_or_initialize
+          if dr.save
+            pp "todo ok"
+          else
+            pp dr.errors
+          end
+        end
       end
+
+      # def get_last_dolar dolar_type
+      #   last_usd = Dolar::Bna::DolarCotization.where(dolar_type: dolar_type).last
+      #   return last_usd
+      # end
 
     end
   end

@@ -7,31 +7,25 @@ module Dolar
       end
 
       def perform
-        billete, divisa = check_today_cotization()
-        if @dolar_type == "Billete"
-          return billete
-        else
-          return divisa
-        end
+        dolar = check_today_cotization()
+        return dolar
       end
 
       private
 
       def check_today_cotization
-        divisa_query = Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: "Divisa").first
-        billete_query = Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: "Billete").first
-        ddivisa = {compra: "-", venta: "-"}
-        if divisa_query.nil?
-          ddivisa = Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
+        query = Dolar::Bna::DolarCotization.where(date: Date.today, dolar_type: @dolar_type).order("dolar_cotizations.created_at DESC").first
+        #data = {compra: "-", venta: "-"}
+        if query.nil?
+          if @dolar_type == "Billete"
+            data = Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
+          else
+            data = Dolar::Bna::Exchange.new(Date.today).perform_bna_divisa
+          end
         else
-          dbillete = {compra: divisa_query.dolar_buy, venta: divisa_query.dolar_sell}
+          data = {compra: query.dolar_buy, venta: query.dolar_sell}
         end
-        if billete_query.nil?
-          dbillete = Dolar::Bna::Exchange.new(Date.today).perform_bna_billete
-        else
-          dbillete = {compra: billete_query.dolar_buy, venta: billete_query.dolar_sell}
-        end
-        return dbillete, ddivisa
+        return data
       end
     end
   end

@@ -1,3 +1,4 @@
+I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
 require "dolar/bna/version"
 require 'dolar/bna/exchange'
 require 'dolar/bna/today_exchange'
